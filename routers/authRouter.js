@@ -1,13 +1,25 @@
 const authRouter = require("express").Router();
 const loginController = require("../controllers/LoginController");
 const registerController = require("../controllers/RegisterController");
+const { body } = require("express-validator");
+const { dashboardController } = require("../controllers/DashboardController");
+
+// login route
+authRouter.post("/login", 
+body("email").isEmail().withMessage("The email is unvalid!"),
+loginController);
+
+// register route
+authRouter.post("/register", 
+body("email").isEmail().withMessage("The email is unvalid!"),
+body("password").isLength({ min: 6}).withMessage("Password must be atleast 6 characters!"),
+registerController);
 
 
+// dashboard route
+authRouter.get("/dashboard", dashboardController);
 
-authRouter.post("/login", loginController);
 
-
-authRouter.post("/register", registerController);
 
 
 module.exports = authRouter;

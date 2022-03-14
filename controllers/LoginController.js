@@ -1,8 +1,15 @@
+const { loginUser } = require("../services/userService");
 
+const loginController = async (req, res) => {
+    const { email, password } = req.body;
 
-const loginController = (req, res) => {
-    console.log(req.body);
-    res.send("Login Controller");
+    try {
+        const token = await loginUser(email, password);
+        res.json({ token });
+    } catch(err) {
+        res.json({ error: err.message });
+    }
+
 }
 
 
