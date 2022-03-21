@@ -3,6 +3,8 @@ const loginController = require("../controllers/LoginController");
 const registerController = require("../controllers/RegisterController");
 const { body } = require("express-validator");
 const { dashboardController } = require("../controllers/DashboardController");
+const { isAuthenticated } = require("../middleware/auth");
+
 
 // login route
 authRouter.post("/login", 
@@ -17,7 +19,7 @@ registerController);
 
 
 // dashboard route
-authRouter.get("/dashboard", dashboardController);
+authRouter.get("/dashboard", isAuthenticated, dashboardController);
 
 
 

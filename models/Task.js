@@ -9,7 +9,7 @@ const taskSchema = new Schema({
     assignedTo: { type: Schema.Types.ObjectId, ref: 'user'},
     description: { type: String, required: true},
     project: { type: Schema.Types.ObjectId, ref: "project"}
-});
+}, { timestamps: true});
 
 
 const Task = model("task", taskSchema);

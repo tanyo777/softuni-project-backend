@@ -92,6 +92,12 @@ const loginUser = async (email, password) => {
 }
 
 
+const getFullDataForUser = async (username) => {
+  const result = await User.findOne({ username }).populate('projects');
+  return result;
+}
+
+
 
 
 
@@ -99,5 +105,6 @@ module.exports = {
   createUser,
   loginUser,
   findUser,
-  findUserByUsername
+  findUserByUsername,
+  getFullDataForUser
 };
