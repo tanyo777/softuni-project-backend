@@ -3,7 +3,7 @@ const cors = require("cors");
 const express = require("express");
 const authRouter = require("../routers/authRouter");
 const { projectRouter } = require("../routers/projectRouter");
-
+const { taskRouter } = require("../routers/taskRouter");
 
 async function configureApp(app) {
 
@@ -17,6 +17,7 @@ async function configureApp(app) {
     // routers
     app.use("/", authRouter);
     app.use("/", projectRouter)
+    app.use("/", taskRouter)
 }
 
 

@@ -12,7 +12,7 @@ const projectSchema = new Schema({
     tasks: { type: [Schema.Types.ObjectId], ref: "task", default: []}
 }, { timestamps: true });
 
-
+projectSchema.index({ key: 1}, { unique: true });
 const Project = model("project", projectSchema);
 
 module.exports = Project;
