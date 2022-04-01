@@ -9,7 +9,8 @@ const taskSchema = new Schema({
     // assignedTo: { type: Schema.Types.ObjectId, ref: 'user'},
     description: { type: String},
     priority: { type: String},
-    project: { type: Schema.Types.ObjectId, ref: "project"}
+    project: { type: Schema.Types.ObjectId, ref: "project"},
+    status: { type: String, required: true, default: 'To do'}
 }, { timestamps: true});
 
 
