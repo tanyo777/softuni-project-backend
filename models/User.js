@@ -8,7 +8,8 @@ const userSchema = new Schema({
     email: {type: String, required: true},
     password: {type: String , required: true, minlength: [6, "Password must be atleast 6 characters!"]},
     projects: {type: [Schema.Types.ObjectId], ref: "project", default: []},
-    tasks: {type: [Schema.Types.ObjectId], ref: "task", default: []}
+    tasks: {type: [Schema.Types.ObjectId], ref: "task", default: []},
+    hasProfilePicture: { type: Boolean, default: false}
 }, { timestamps: true });
 
 
