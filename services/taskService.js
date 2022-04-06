@@ -20,6 +20,12 @@ const createTask =  async (issueType, summary, reporter, description, priority, 
 }
 
 
+const deleteTask = async (id) => {
+    await Task.findByIdAndRemove(id);
+    return "Task successfully deleted!";
+}
+
 module.exports = {
-    createTask
+    createTask,
+    deleteTask
 }
