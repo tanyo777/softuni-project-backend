@@ -1,4 +1,4 @@
-const { createTask, deleteTask } = require("../services/taskService");
+const { createTask, deleteTask, updateTaskStatus } = require("../services/taskService");
 const jwt = require("jsonwebtoken");
 const { getProjectByKey } = require("../services/projectService");
 
@@ -30,7 +30,7 @@ const createTaskHandler = async (req, res) => {
     selectedProject.tasks.push(task._id);
     await selectedProject.save();
 
-    res.json({ msg: "Successfully created a task!" });
+    res.json({ msg: task});
   } catch (err) {
     res.json({ error: err.message });
   }
@@ -50,7 +50,19 @@ const deleteTaskHandler = async (req, res) => {
   }
 };
 
+const updateTaskStatusHandler = async (req, res) => {
+  const { id, status } = req.body; 
+  try {
+    const updatedTask = await updateTaskStatus(id, status);
+    console.log(updatedTask);
+    res.json({ msg: "Task's status successfully updated!" });
+  } catch(err) {
+    res.json({ error: "Task's status cannot be changed!" });
+  }
+}
+
 module.exports = {
   createTaskHandler,
   deleteTaskHandler,
+  updateTaskStatusHandler
 };
