@@ -12,8 +12,14 @@ const getProjectByKey = async (key) => {
   return project;
 }
 
+const getProjectById = async (id) => {
+  const project = await Project.findById(id);
+  return project;
+}
+
 
 module.exports = {
   getProject,
-  getProjectByKey
+  getProjectByKey,
+  getProjectById
 }

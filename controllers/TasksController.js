@@ -1,4 +1,4 @@
-const { createTask, deleteTask, updateTaskStatus } = require("../services/taskService");
+const { createTask, deleteTask, updateTaskStatus, updateTask } = require("../services/taskService");
 const jwt = require("jsonwebtoken");
 const { getProjectByKey } = require("../services/projectService");
 
@@ -61,8 +61,33 @@ const updateTaskStatusHandler = async (req, res) => {
   }
 }
 
+const updateTaskProperties = async (req, res) => {
+  const { id, properties } = req.body;
+
+  console.log(id, properties);
+
+  try {
+    const task = await updateTask(
+      id, 
+      { 
+        summary: properties.summary,
+        issueType: properties.issueType,
+        priority: properties.priority,
+        description: properties.description,
+        createdAt: properties.createTask,
+        updatedAd: properties.updatedAt 
+      }
+    );
+    console.log(task);
+    res.json({ task });
+  } catch(err) {
+    res.json({ error: "Task's status cannot be changed!" });
+  }
+}
+
 module.exports = {
   createTaskHandler,
   deleteTaskHandler,
-  updateTaskStatusHandler
+  updateTaskStatusHandler,
+  updateTaskProperties
 };

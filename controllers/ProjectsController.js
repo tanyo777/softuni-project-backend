@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const Project = require("../models/Project");
-const { getProject } = require("../services/projectService");
-const { findUserByUsername } = require("../services/userService");
+const { getProject, getProjectById } = require("../services/projectService");
+const { findUserByUsername, getUserByEmail } = require("../services/userService");
 
 
 
@@ -58,7 +58,43 @@ const getProjectController = async (req, res) => {
     }
 }
 
+
+const inviteUser = async (req, res) => {
+    const { email, projectId } = req.body;
+
+
+    try {
+        // get user by email
+    const user = await getUserByEmail(email);
+
+    if(!user) {
+        throw Error("User with that email doesn't exist!");
+    }
+
+    // get project
+    const project = await getProjectById(projectId)
+
+
+    if(!project.participants.includes(user._id) && !user.projects.includes(project._id)) {
+        project.participants.push(user._id);
+        user.projects.push(project._id);
+    } else {
+        throw Error("That user is already in the project!");
+    }
+    
+    
+    await user.save()
+    await project.save()
+
+    res.json({ user });
+    } catch (error) {
+        res.json({ error: error.message});
+    }
+
+}
+
 module.exports = {
     projectsController,
-    getProjectController
+    getProjectController,
+    inviteUser
 }

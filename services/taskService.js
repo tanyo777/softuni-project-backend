@@ -32,8 +32,16 @@ const updateTaskStatus = async (id, status) => {
     return task;
 }
 
+const updateTask = async (id, { summary, issueType, priority, description, createdAt, updatedAt }) => {
+
+    
+    let task = await Task.findByIdAndUpdate(id, { summary, issueType, priority, description, createdAt, updatedAt});
+    return task;
+}
+
 module.exports = {
     createTask,
     deleteTask,
-    updateTaskStatus
+    updateTaskStatus,
+    updateTask
 }
