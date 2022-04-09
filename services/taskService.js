@@ -32,10 +32,10 @@ const updateTaskStatus = async (id, status) => {
     return task;
 }
 
-const updateTask = async (id, { summary, issueType, priority, description, createdAt, updatedAt }) => {
+const updateTask = async (id, { summary, issueType, priority, description, createdAt, updatedAt, assignedTo }) => {
 
     
-    let task = await Task.findByIdAndUpdate(id, { summary, issueType, priority, description, createdAt, updatedAt});
+    let task = await Task.findByIdAndUpdate(id, { summary, issueType, priority, description, createdAt, updatedAt, assignedTo});
     return task;
 }
 

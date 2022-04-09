@@ -3,6 +3,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 
+const getUserById = async (id) => {
+  const user = await User.findById(id);
+  return user;
+}
+
+
 const getUserByEmail = async (email) => {
   const user = await User.findOne({ email });
   return user;
@@ -112,5 +118,6 @@ module.exports = {
   findUser,
   findUserByUsername,
   getFullDataForUser,
-  getUserByEmail
+  getUserByEmail,
+  getUserById
 };

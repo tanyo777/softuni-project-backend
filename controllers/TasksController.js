@@ -75,7 +75,8 @@ const updateTaskProperties = async (req, res) => {
         priority: properties.priority,
         description: properties.description,
         createdAt: properties.createTask,
-        updatedAd: properties.updatedAt 
+        updatedAd: properties.updatedAt,
+        assignedTo: properties.assignedTo 
       }
     );
     console.log(task);

@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const Project = require("../models/Project");
 const { getProject, getProjectById } = require("../services/projectService");
-const { findUserByUsername, getUserByEmail } = require("../services/userService");
+const { findUserByUsername, getUserByEmail, getUserById } = require("../services/userService");
 
 
 
@@ -93,8 +93,71 @@ const inviteUser = async (req, res) => {
 
 }
 
+
+const leaveParticipant = async (req, res) => {
+    const { projectId, participantId } = req.body;
+    try {
+        const project = await getProjectById(projectId);
+        const participant = await getUserById(participantId);
+
+        console.log(project._id);
+        console.log(participant._id);
+
+
+        project.participants = project.participants.filter(id => String(id) !== String(participant._id));
+        participant.projects = participant.projects.filter(id => String(id) !== String(project._id));
+
+
+        await project.save();
+        await participant.save();
+
+        res.json({ msg: "Successfully left the project!"});
+    } catch(error) {
+        res.json({ error: error.message});
+    }
+}
+
+
+const leaveManager = async (req, res) => {
+    const { projectId, participantId, pmEmail } = req.body;
+    try {
+        const project = await getProjectById(projectId);
+        const participant = await getUserById(participantId);
+        const newPm = await getUserByEmail(pmEmail);
+
+        if(!newPm) {
+            throw Error("There is no user with that email!");
+        }
+
+        
+        project.participants = project.participants.filter(id => String(id) !== String(participant._id));
+        participant.projects = participant.projects.filter(id => String(id) !== String(project._id));
+
+        let isTheNewPmAParticipant = false;
+        if(project.participants.includes(newPm._id)) {
+            isTheNewPmAParticipant = true;
+        }
+
+        if(isTheNewPmAParticipant) {
+            project.lead = newPm._id;
+        } else {
+            throw Error("There is no participant with that email!");
+        }
+
+
+        await project.save();
+        await participant.save();
+
+        res.json({ msg: "Successfully left the project!"});
+    } catch(error) {
+        res.json({ error: error.message});
+    }
+}
+
 module.exports = {
     projectsController,
     getProjectController,
-    inviteUser
+    inviteUser,
+    leaveParticipant,
+    leaveManager
 }
