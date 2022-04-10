@@ -100,8 +100,6 @@ const leaveParticipant = async (req, res) => {
         const project = await getProjectById(projectId);
         const participant = await getUserById(participantId);
 
-        console.log(project._id);
-        console.log(participant._id);
 
 
         project.participants = project.participants.filter(id => String(id) !== String(participant._id));

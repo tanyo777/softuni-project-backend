@@ -14,7 +14,6 @@ const createTaskHandler = async (req, res) => {
 
     // get the project by key
     let selectedProject = await getProjectByKey(project);
-    console.log(selectedProject);
 
     // create the task
     const task = await createTask(
@@ -54,7 +53,6 @@ const updateTaskStatusHandler = async (req, res) => {
   const { id, status } = req.body; 
   try {
     const updatedTask = await updateTaskStatus(id, status);
-    console.log(updatedTask);
     res.json({ msg: "Task's status successfully updated!" });
   } catch(err) {
     res.json({ error: "Task's status cannot be changed!" });
@@ -64,7 +62,6 @@ const updateTaskStatusHandler = async (req, res) => {
 const updateTaskProperties = async (req, res) => {
   const { id, properties } = req.body;
 
-  console.log(id, properties);
 
   try {
     const task = await updateTask(
@@ -79,7 +76,6 @@ const updateTaskProperties = async (req, res) => {
         assignedTo: properties.assignedTo 
       }
     );
-    console.log(task);
     res.json({ task });
   } catch(err) {
     res.json({ error: "Task's status cannot be changed!" });
