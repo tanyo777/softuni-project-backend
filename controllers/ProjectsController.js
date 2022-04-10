@@ -12,12 +12,12 @@ const projectsController = async (req, res) => {
     try {
         const verified = await jwt.verify(token, process.env.jwtPrivateKey);
 
-  
 
-            const user = await findUserByUsername(verified.username);
 
-       
-            console.log(user);
+        const user = await findUserByUsername(verified.username);
+
+
+        console.log(user);
         const project = new Project({
             name,
             key,
@@ -36,12 +36,12 @@ const projectsController = async (req, res) => {
         user.projects.push(projectId);
         await user.save();
 
-        res.status(200).json({message: "Successfully created a project!"});
+        res.status(200).json({ message: "Successfully created a project!" });
 
-        
-        
-    } catch(err) {
-        res.json({error: err.message});
+
+
+    } catch (err) {
+        res.json({ error: err.message });
     }
 
 }
@@ -52,43 +52,54 @@ const getProjectController = async (req, res) => {
     try {
         await jwt.verify(token, process.env.jwtPrivateKey);
         const projectData = await getProject(projectId);
-        res.json({project: projectData});
-    } catch(err) {
-        res.json({error: err.message});
+        res.json({ project: projectData });
+    } catch (err) {
+        res.json({ error: err.message });
     }
 }
 
 
 const inviteUser = async (req, res) => {
     const { email, projectId } = req.body;
+    const { token } = req.headers;
+
 
 
     try {
+        const PM = await jwt.verify(token, process.env.jwtPrivateKey);
+
+        console.log(PM);
         // get user by email
-    const user = await getUserByEmail(email);
+        const user = await getUserByEmail(email);
 
-    if(!user) {
-        throw Error("User with that email doesn't exist!");
-    }
+        if (!user) {
+            throw Error("User with that email doesn't exist!");
+        }
 
-    // get project
-    const project = await getProjectById(projectId)
+        // get project
+        const project = await getProjectById(projectId)
 
 
-    if(!project.participants.includes(user._id) && !user.projects.includes(project._id)) {
-        project.participants.push(user._id);
-        user.projects.push(project._id);
-    } else {
-        throw Error("That user is already in the project!");
-    }
-    
-    
-    await user.save()
-    await project.save()
+        if(String(project.lead._id) !== String(PM._id)) {
+            throw Error("You are not the manager of the project!");
+        }
 
-    res.json({ user });
+
+
+        if (!project.participants.includes(user._id) && !user.projects.includes(project._id)) {
+            project.participants.push(user._id);
+            user.projects.push(project._id);
+        } else {
+            throw Error("That user is already in the project!");
+        }
+
+
+        await user.save()
+        await project.save()
+
+        res.json({ user });
     } catch (error) {
-        res.json({ error: error.message});
+        res.json({ error: error.message });
     }
 
 }
@@ -109,34 +120,45 @@ const leaveParticipant = async (req, res) => {
         await project.save();
         await participant.save();
 
-        res.json({ msg: "Successfully left the project!"});
-    } catch(error) {
-        res.json({ error: error.message});
+        res.json({ msg: "Successfully left the project!" });
+    } catch (error) {
+        res.json({ error: error.message });
     }
 }
 
 
 const leaveManager = async (req, res) => {
     const { projectId, participantId, pmEmail } = req.body;
+
+    const { token } = req.headers;
+
     try {
+
+        const PM = await jwt.verify(token, process.env.jwtPrivateKey);
+
         const project = await getProjectById(projectId);
+
+        if(String(project.lead._id) !== String(PM._id)) {
+            throw Error("You are not the manager of the project!");
+        }
+
         const participant = await getUserById(participantId);
         const newPm = await getUserByEmail(pmEmail);
 
-        if(!newPm) {
+        if (!newPm) {
             throw Error("There is no user with that email!");
         }
 
-        
+
         project.participants = project.participants.filter(id => String(id) !== String(participant._id));
         participant.projects = participant.projects.filter(id => String(id) !== String(project._id));
 
         let isTheNewPmAParticipant = false;
-        if(project.participants.includes(newPm._id)) {
+        if (project.participants.includes(newPm._id)) {
             isTheNewPmAParticipant = true;
         }
 
-        if(isTheNewPmAParticipant) {
+        if (isTheNewPmAParticipant) {
             project.lead = newPm._id;
         } else {
             throw Error("There is no participant with that email!");
@@ -146,9 +168,9 @@ const leaveManager = async (req, res) => {
         await project.save();
         await participant.save();
 
-        res.json({ msg: "Successfully left the project!"});
-    } catch(error) {
-        res.json({ error: error.message});
+        res.json({ msg: "Successfully left the project!" });
+    } catch (error) {
+        res.json({ error: error.message });
     }
 }
 
