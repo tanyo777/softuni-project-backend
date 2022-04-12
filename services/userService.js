@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const qrcode = require('qrcode');
 
 const getUserById = async (id) => {
   const user = await User.findById(id);
@@ -29,7 +29,8 @@ const findUserByUsername = async (username) => {
 
 
 // register 
-const createUser = async (fullName, username, email, password, confirmPassword) => {
+const createUser = async (fullName, username, email, password, confirmPassword, secret, otpauth_url) => {
+
 
   // check if passwords match
   if(password !== confirmPassword) {
@@ -52,6 +53,9 @@ const createUser = async (fullName, username, email, password, confirmPassword) 
   }
   
 
+
+  const qr = await qrcode.toDataURL(secret.otpauth_url)
+
   // hash password
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -61,7 +65,9 @@ const createUser = async (fullName, username, email, password, confirmPassword) 
     fullName, 
     username, 
     email,
-    password: hashedPassword
+    password: hashedPassword,
+    secret: secret.base32,
+    otpauth_url
   });
 
   await newUser.save();
@@ -73,7 +79,7 @@ const createUser = async (fullName, username, email, password, confirmPassword) 
   const token = await jwt.sign(newUser, process.env.jwtPrivateKey)
 
   // return token
-  return {token};
+  return {token, qrcode: qr};
   //return newUser;
 };
 

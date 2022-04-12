@@ -9,7 +9,9 @@ const userSchema = new Schema({
     password: {type: String , required: true, minlength: [6, "Password must be atleast 6 characters!"]},
     projects: {type: [Schema.Types.ObjectId], ref: "project", default: []},
     tasks: {type: [Schema.Types.ObjectId], ref: "task", default: []},
-    hasProfilePicture: { type: Boolean, default: false}
+    hasProfilePicture: { type: Boolean, default: false},
+    secret: { type: String, required: true},
+    otpauth_url: { type: String, required: true}
 }, { timestamps: true });
 
 
