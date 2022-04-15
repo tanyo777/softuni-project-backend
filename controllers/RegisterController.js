@@ -51,7 +51,6 @@ const twoFa = async (req, res) => {
 const qrcodeData = async (req, res) => {
 
     const { otpauth_url } = req.body;
-    console.log(req.body);
 
     const qr = await qrcode.toDataURL(otpauth_url)
     res.json({ qrcode: qr});

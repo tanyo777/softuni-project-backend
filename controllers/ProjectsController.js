@@ -17,7 +17,6 @@ const projectsController = async (req, res) => {
         const user = await findUserByUsername(verified.username);
 
 
-        console.log(user);
         const project = new Project({
             name,
             key,
@@ -68,7 +67,6 @@ const inviteUser = async (req, res) => {
     try {
         const PM = await jwt.verify(token, process.env.jwtPrivateKey);
 
-        console.log(PM);
         // get user by email
         const user = await getUserByEmail(email);
 
