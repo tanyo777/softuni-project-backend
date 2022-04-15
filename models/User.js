@@ -10,8 +10,8 @@ const userSchema = new Schema({
     projects: {type: [Schema.Types.ObjectId], ref: "project", default: []},
     tasks: {type: [Schema.Types.ObjectId], ref: "task", default: []},
     hasProfilePicture: { type: Boolean, default: false},
-    secret: { type: String, required: true},
-    otpauth_url: { type: String, required: true}
+    secret: { type: String},
+    otpauth_url: { type: String}
 }, { timestamps: true });
 
 
