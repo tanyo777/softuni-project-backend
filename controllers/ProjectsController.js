@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Project = require("../models/Project");
-const { getProject, getProjectById } = require("../services/projectService");
+const { getProject, getProjectById, getProjectByKey } = require("../services/projectService");
 const { findUserByUsername, getUserByEmail, getUserById } = require("../services/userService");
 
 
@@ -12,7 +12,13 @@ const projectsController = async (req, res) => {
     try {
         const verified = await jwt.verify(token, process.env.jwtPrivateKey);
 
+        const doesProjectKeyExist = await getProjectByKey(key);
 
+    
+
+        if(doesProjectKeyExist) {
+            throw Error("Project key already exists!");
+        }
 
         const user = await findUserByUsername(verified.username);
 
@@ -40,6 +46,7 @@ const projectsController = async (req, res) => {
 
 
     } catch (err) {
+        console.log(err.message);
         res.json({ error: err.message });
     }
 
